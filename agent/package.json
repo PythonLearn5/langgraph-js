@@ -9,7 +9,7 @@
   "main": "index.js",
   "packageManager": "yarn@1.22.22",
   "scripts": {
-    "dev": "langgraphjs dev --port 8123 --no-browser"
+    "dev": "langgraphjs dev --host 127.0.0.1 --port 8123 --no-browser"
   },
   "dependencies": {
     "@copilotkit/sdk-js": "1.70.0",

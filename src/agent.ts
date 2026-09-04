@@ -11,6 +11,11 @@ import { LangGraphAgent, type LangGraphAgentConfig } from "@ag-ui/langgraph";
  */
 export function createDefaultAgent(): LangGraphAgent {
   const config: LangGraphAgentConfig = {
+    // Agent 唯一标识与显示名，与 Runtime 注册 key `agents.default` 保持一致；
+    // 显式设置 name 以避免 @ag-ui/client 事件分发路径中访问 agent.name 时出现 undefined 崩溃
+    agentId: "default",
+    agentName: "default",
+    description: "LangGraph sample_agent (Next.js + CopilotKit v2 starter)",
     // 地址优先级：AGENT_URL > LANGGRAPH_DEPLOYMENT_URL > localhost:8123
     deploymentUrl:
       process.env.AGENT_URL ||

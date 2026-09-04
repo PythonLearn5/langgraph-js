@@ -1,7 +1,7 @@
 import {
   CopilotRuntime,
   CopilotKitIntelligence,
-  createCopilotEndpoint,
+  createCopilotHonoHandler,
   InMemoryAgentRunner,
 } from "@copilotkit/runtime/v2";
 import { createDefaultAgent } from "@/agent";
@@ -9,13 +9,15 @@ import { handle } from "hono/vercel";
 
 const defaultAgent = createDefaultAgent();
 
+const useIntelligence = !!process.env.CPK_INTELLIGENCE_API_KEY;
+
 const runtime = new CopilotRuntime({
   agents: { default: defaultAgent },
   // --- copilotkit:intelligence (remove this block to opt out) ---
-  ...(process.env.CPK_INTELLIGENCE_API_KEY
+  ...(useIntelligence
     ? {
         intelligence: new CopilotKitIntelligence({
-          apiKey: process.env.CPK_INTELLIGENCE_API_KEY,
+          apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
           ...(process.env.INTELLIGENCE_API_URL
             ? { apiUrl: process.env.INTELLIGENCE_API_URL }
             : {}),
@@ -46,7 +48,7 @@ const runtime = new CopilotRuntime({
   },
 });
 
-const app = createCopilotEndpoint({
+const app = createCopilotHonoHandler({
   runtime,
   basePath: "/api/copilotkit",
 });
