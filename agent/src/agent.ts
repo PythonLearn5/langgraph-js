@@ -23,9 +23,23 @@ const AgentStateSchema = new StateSchema({
   ...(CopilotKitStateSchema.fields as Record<string, any>),
 });
 
+const GATEWAY_BASE_URL =
+  process.env.VERCEL_AI_GATEWAY_URL ||
+  process.env.LLM_BASE_URL ||
+  process.env.OPENAI_BASE_URL ||
+  undefined;
+
+const GATEWAY_API_KEY =
+  process.env.VERCEL_AI_GATEWAY_KEY ||
+  process.env.LLM_API_KEY ||
+  process.env.OPENAI_API_KEY ||
+  undefined;
+
 const model = new ChatOpenAI({
   model: "gpt-5.4",
   modelKwargs: { parallel_tool_calls: false },
+  ...(GATEWAY_BASE_URL ? { baseURL: GATEWAY_BASE_URL } : {}),
+  ...(GATEWAY_API_KEY ? { apiKey: GATEWAY_API_KEY } : {}),
 });
 
 export const graph = createAgent({

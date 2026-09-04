@@ -7,7 +7,7 @@
     "dev": "concurrently \"yarn dev:ui\" \"yarn dev:agent\" --names ui,agent --prefix-colors blue,green --kill-others",
     "dev:debug": "LOG_LEVEL=debug yarn dev",
     "dev:ui": "next dev --turbopack",
-    "dev:agent": "./scripts/run-agent.sh || scripts\\run-agent.bat",
+    "dev:agent": "cd agent && yarn dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

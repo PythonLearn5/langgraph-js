@@ -3,10 +3,27 @@ set -e
 
 echo "[entrypoint] Starting: langgraph-js starter"
 
-if [ -z "$OPENAI_API_KEY" ]; then
+if [ -n "$VERCEL_AI_GATEWAY_URL" ]; then
+  echo "[entrypoint] Using Vercel AI Gateway: $VERCEL_AI_GATEWAY_URL"
+  if [ -n "$VERCEL_AI_GATEWAY_KEY" ]; then
+    echo "[entrypoint] VERCEL_AI_GATEWAY_KEY: set"
+  else
+    echo "[entrypoint] WARNING: VERCEL_AI_GATEWAY_KEY not set (gateway may reject requests)"
+  fi
+elif [ -n "$LLM_BASE_URL" ]; then
+  echo "[entrypoint] Using custom LLM endpoint: $LLM_BASE_URL"
+elif [ -n "$OPENAI_BASE_URL" ]; then
+  echo "[entrypoint] Using OPENAI_BASE_URL override: $OPENAI_BASE_URL"
+  if [ -z "$OPENAI_API_KEY" ]; then
+    echo "[entrypoint] WARNING: OPENAI_API_KEY not set!"
+  else
+    echo "[entrypoint] OPENAI_API_KEY: set"
+  fi
+elif [ -z "$OPENAI_API_KEY" ]; then
   echo "[entrypoint] WARNING: OPENAI_API_KEY not set!"
+  echo "[entrypoint] TIP: set VERCEL_AI_GATEWAY_URL + VERCEL_AI_GATEWAY_KEY to route through a gateway"
 else
-  echo "[entrypoint] OPENAI_API_KEY: set"
+  echo "[entrypoint] OPENAI_API_KEY: set (direct OpenAI)"
 fi
 
 # Start agent via LangGraph CLI
